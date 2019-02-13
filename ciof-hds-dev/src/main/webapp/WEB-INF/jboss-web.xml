@@ -1,0 +1,4 @@
+<jboss-web>
+    <security-domain>ciof-hds</security-domain> 
+    <context-root>/hds</context-root>
+</jboss-web>
