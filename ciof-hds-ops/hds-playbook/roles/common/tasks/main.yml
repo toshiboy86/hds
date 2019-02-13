@@ -1,0 +1,9 @@
+---
+- name: Create /opt/hds/download directory
+  file:
+    path: /opt/hds/download
+    state: directory
+
+- name: Install Java
+  yum:
+    name: java-1.8.0-openjdk

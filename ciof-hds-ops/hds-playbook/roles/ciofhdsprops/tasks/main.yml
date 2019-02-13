@@ -1,0 +1,10 @@
+---
+- name: Create directory for HDS configuration
+  file:
+    path: /etc/ciof
+    state: directory
+
+- name: Template HDS properties file
+  template:
+    src: ciof-hds.properties.j2
+    dest: /etc/ciof/ciof-hds.properties

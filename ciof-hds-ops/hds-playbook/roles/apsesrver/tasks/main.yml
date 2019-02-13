@@ -1,0 +1,77 @@
+---
+- name: Download wildfly
+  get_url:
+    url: http://download.jboss.org/wildfly/10.1.0.Final/wildfly-10.1.0.Final.tar.gz
+    dest: /opt/hds/download/wildfly-10.1.0.Final.tar.gz
+
+- name: Unarchive wildfly
+  unarchive: 
+    src: /opt/hds/download/wildfly-10.1.0.Final.tar.gz 
+    dest: /opt/hds/
+  args:
+    creates: /opt/hds/wildfly-10.1.0.Final/
+
+- name: Create symbolic link for wildfly
+  file:
+    src: /opt/hds/wildfly-10.1.0.Final/
+    dest: /opt/wildfly
+    state: link
+
+- name: Add group "wildfly"
+  group:
+     name: wildfly
+
+- name: Add user "wildfly"
+  user:
+     name: wildfly
+     group: wildfly
+
+- name: Download postgresql JDBC driver
+  get_url:
+    url: https://jdbc.postgresql.org/download/postgresql-9.4.1208.jar
+    dest: /opt/hds/download/postgresql-9.4.1208.jar
+
+- name: Copy postgresql JDBC driver to wildfly modules directory
+  copy:
+    src: /opt/hds/download/postgresql-9.4.1208.jar
+    dest: /opt/wildfly/modules/org/postgresql/main/
+
+- name: Copy module.xml
+  copy:
+    src: module.xml
+    dest: /opt/wildfly/modules/org/postgresql/main/
+  notify: wildfly_restart_handler
+
+- name: Copy standalone.xml
+  copy:
+    src: standalone.xml
+    dest: /opt/wildfly/standalone/configuration/standalone.xml
+  notify: wildfly_restart_handler
+
+- name: Change ownership of wildfly 
+  file:
+    path: /opt/wildfly/
+    owner: wildfly
+    group: wildfly
+    state: directory
+    recurse: yes 
+
+- name: Copy wildfly.conf for wildfly service
+  copy:
+    src: /opt/wildfly/docs/contrib/scripts/systemd/wildfly.conf
+    dest: /etc/wildfly/
+
+- name: Copy wildfly.service for wildfly service
+  copy:
+    src: /opt/wildfly/docs/contrib/scripts/systemd/wildfly.service
+    dest: /etc/systemd/system/
+
+- name: Copy launch.sh for wildfly service
+  copy:
+    src: /opt/wildfly/docs/contrib/scripts/systemd/launch.sh
+    dest: /opt/wildfly/bin/
+    mode: 0755
+
+- name: Enable wildFly service
+  service: name=wildfly enabled=yes
+  

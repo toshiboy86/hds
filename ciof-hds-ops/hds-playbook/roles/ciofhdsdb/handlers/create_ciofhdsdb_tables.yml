@@ -1,0 +1,6 @@
+---
+- name: Create database
+  command: psql -h localhost -U postgres -f /opt/hds/sql/ciofhdsdb.create.sql
+
+- name: Create tables
+  command: psql -h localhost -U postgres -f /opt/hds/sql/ciofhdsdb.init.sql ciofhdsdb

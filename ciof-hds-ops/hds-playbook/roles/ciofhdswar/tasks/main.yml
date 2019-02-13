@@ -1,0 +1,6 @@
+---
+- name: Copy application WAR file to host 
+  copy: 
+    src: ciof-hds.war
+    dest: /opt/hds/war/
+  notify: deploy_ciof_hds_war

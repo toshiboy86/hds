@@ -1,0 +1,27 @@
+---
+- name: Download nginx yum repository
+  get_url:
+    url: http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+    dest: /opt/hds/download/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+
+- name: Install nginx yum repository
+  yum: name=/opt/hds/download/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+
+- name: Install nginx
+  yum:
+     name: nginx-1.12.2 
+     state: installed
+
+- name: Template nginx configuration file
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify: nginx_restart_handler
+
+- name: Enable nginx service
+  service:
+    name: nginx
+    enabled: yes
+
+- name: Generate certificate
+  import_tasks: generate_certificate.yml

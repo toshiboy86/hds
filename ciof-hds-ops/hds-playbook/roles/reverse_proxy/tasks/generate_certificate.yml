@@ -1,0 +1,35 @@
+---
+- name: Check server.key
+  stat: path=/etc/pki/tls/private/server.key
+  register: server_key
+
+- name: Generate OpenSSL private key
+  command: openssl genrsa -out /etc/pki/tls/private/server.key
+  when: not server_key.stat.exists
+
+- name: Check server.csr
+  stat:
+    path: /etc/pki/tls/certs/server.csr
+  register: server_csr
+
+- name: Generate an OpenSSL Certificate Signing Request
+  command: openssl req -new -key /etc/pki/tls/private/server.key -out /etc/pki/tls/certs/server.csr -subj "/CN={{ inventory_hostname }}"
+  when: not server_csr.stat.exists
+
+- name: Check server.crt
+  stat:
+    path: /etc/pki/tls/certs/server.crt
+  register: server_crt
+
+- name: Generate a Self Signed OpenSSL certificate
+  command: openssl x509 -in /etc/pki/tls/certs/server.csr -out /etc/pki/tls/certs/server.crt -req -signkey /etc/pki/tls/private/server.key
+  when: not server_crt.stat.exists
+
+- name: Check dhparam.2048.pem
+  stat:
+    path: /etc/pki/tls/private/dhparam.2048.pem
+  register: dhparam_2048_pem
+
+- name: Generate DH Parameters with 2048 bits
+  command: openssl dhparam -out /etc/pki/tls/private/dhparam.2048.pem 2048
+  when: not dhparam_2048_pem.stat.exists

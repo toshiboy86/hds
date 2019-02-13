@@ -1,0 +1,12 @@
+---
+- name: Copy ciofhdsdb.create.sql
+  copy:
+    src: ciofhdsdb.create.sql
+    dest: /opt/hds/sql/
+  notify: create_ciofhdsdb_tables
+
+- name: Copy  ciofhdsdb.init.sql
+  copy:
+    src: ciofhdsdb.init.sql
+    dest: /opt/hds/sql/
+  notify: create_ciofhdsdb_tables

@@ -1,0 +1,12 @@
+---
+- name: Copy adduser.sh
+  copy: 
+    src: adduser.sh
+    dest: /opt/hds/bin/
+    mode: u+x
+
+- name: Copy hashpassword.sh
+  copy: 
+    src: hashpassword.sh
+    dest: /opt/hds/bin/
+    mode: u+x

@@ -1,0 +1,3 @@
+---
+- name: create_ciofhdsdb_tables
+  import_tasks: create_ciofhdsdb_tables.yml

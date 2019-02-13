@@ -1,0 +1,10 @@
+---
+- name: Restart wildfly
+  service:
+    name: wildfly
+    state: restarted
+
+- name: Wait for wildfly service start
+  wait_for:
+    port: 8080
+    state: started

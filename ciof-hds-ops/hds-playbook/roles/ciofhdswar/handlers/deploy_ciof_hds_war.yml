@@ -1,0 +1,7 @@
+---
+- name: Deploy ciof-hds.war
+  jboss:
+    deploy_path: /opt/wildfly/standalone/deployments/
+    src: /opt/hds/war/ciof-hds.war
+    deployment: ciof-hds.war
+    state: present

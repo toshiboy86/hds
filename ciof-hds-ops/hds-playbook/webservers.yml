@@ -1,0 +1,13 @@
+---
+- hosts: all
+  roles:
+    - common
+    - reverse_proxy
+    - database
+    - apsesrver
+    - ciofhdsdb
+    - ciofuserdb
+    - ciofhdsprops
+    - ciofhdswar
+    - scripts
+    - security

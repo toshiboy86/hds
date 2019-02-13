@@ -1,0 +1,30 @@
+---
+- name: Download Postgresql yum repository
+  get_url:
+    url: https://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-{{ ansible_distribution | lower }}96-9.6-3.noarch.rpm
+    dest: /opt/hds/download/pgdg-{{ ansible_distribution | lower }}96-9.6-3.noarch.rpm
+
+- name: Install Postgresql yum repository
+  yum:
+    name:
+      - /opt/hds/download/pgdg-{{ ansible_distribution | lower }}96-9.6-3.noarch.rpm
+
+- name: Install postgresql server
+  yum:
+    name:
+      - postgresql96
+      - postgresql96-server
+    state: installed
+
+- name: Initialize database
+  shell: /usr/pgsql-9.6/bin/initdb -D /var/lib/pgsql/9.6/data --no-locale
+  become: yes
+  become_user: postgres
+  args:
+    creates: /var/lib/pgsql/9.6/data/postgresql.conf
+
+- name: Start postgresql server
+  service:
+    name: postgresql-9.6
+    state: started
+    enabled: yes
